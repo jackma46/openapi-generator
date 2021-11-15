@@ -568,7 +568,7 @@ public class AbstractJavaCodegenTest {
         Double doubleValue = 100.0;
         numberSchema.setDefault(doubleValue);
         defaultValue = codegen.toDefaultValue(numberSchema);
-        Assert.assertEquals(defaultValue, "new BigDecimal(\"" + doubleValue + "\")");
+        Assert.assertEquals(defaultValue, "new BigDecimal(\"" + doubleValue.toString() + "\")");
 
         // Test default value for number with format set to double
         numberSchema.setFormat("double");
@@ -750,11 +750,6 @@ public class AbstractJavaCodegenTest {
         Assert.assertEquals(fakeJavaCodegen.getTestFolder(), "src/test/java");
     }
 
-    /**
-     *     Test added to test the changes to processOpts(), specifically the lines to process dateLibrary
-     *     This is testing implementation for issue #9461
-     *     If user enters type mapping for DateTime and corresponding import mapping, this should not be overwritten by dateLibrary
-     */
     @Test
     public void shouldUseDateTypeMapping() {
         fakeJavaCodegen.typeMapping().put("date", "myTestDate");
@@ -764,11 +759,6 @@ public class AbstractJavaCodegenTest {
         Assert.assertEquals(fakeJavaCodegen.importMapping().get("myTestDate"), "myTestDateMapping");
     }
 
-    /**
-     *      Test added to test the changes to processOpts(), specifically the lines to process dateLibrary
-     *      This is testing implementation for issue #9461
-     *      If user enters type mapping for DateTime and corresponding import mapping, this should not be overwritten by dateLibrary
-     */
     @Test
     public void shouldUseDateTimeTypeMapping() {
         fakeJavaCodegen.typeMapping().put("DateTime", "myTestDateTime");
