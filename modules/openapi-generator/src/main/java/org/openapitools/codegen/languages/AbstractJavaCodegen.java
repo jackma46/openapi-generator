@@ -52,6 +52,13 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
 
     private final Logger LOGGER = LoggerFactory.getLogger(AbstractJavaCodegen.class);
     private static final String ARTIFACT_VERSION_DEFAULT_VALUE = "1.0.0";
+    private static final String PROP_NAME_DATE = "date";
+    private static final String MAPPING_NAME_DATE = "Date";
+    private static final String MAPPING_LOCALDATE = "LocalDate";
+    private static final String MAPPING_DATETIME = "DateTime";
+    private static final String MAPPING_OFFSETDATETIME = "OffsetDateTime";
+    private static final String MAPPING_VALUE_THREETEN_OFFSET = "org.threeten.bp.OffsetDateTime";
+    private static final String MAPPING_VALUE_THREETEN_LOCALDATE = "org.threeten.bp.LocalDate";
 
     public static final String FULL_JAVA_UTIL = "fullJavaUtil";
     public static final String DEFAULT_LIBRARY = "<default>";
@@ -553,10 +560,17 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
         if ("threetenbp".equals(dateLibrary)) {
             additionalProperties.put("threetenbp", "true");
             additionalProperties.put("jsr310", "true");
-            typeMapping.put("date", "LocalDate");
-            typeMapping.put("DateTime", "OffsetDateTime");
-            importMapping.put("LocalDate", "org.threeten.bp.LocalDate");
-            importMapping.put("OffsetDateTime", "org.threeten.bp.OffsetDateTime");
+
+            String dateTypeMapping = this.typeMapping.get(PROP_NAME_DATE);
+            if (MAPPING_NAME_DATE.equals(dateTypeMapping)) {
+                typeMapping.put(PROP_NAME_DATE, MAPPING_LOCALDATE);
+                importMapping.put(MAPPING_LOCALDATE, MAPPING_VALUE_THREETEN_LOCALDATE);
+            }
+            String dateTimeTypeMapping = this.typeMapping.get(MAPPING_DATETIME);
+            if (MAPPING_NAME_DATE.equals(dateTimeTypeMapping)) {
+                typeMapping.put(MAPPING_DATETIME, MAPPING_OFFSETDATETIME);
+                importMapping.put(MAPPING_OFFSETDATETIME, MAPPING_VALUE_THREETEN_OFFSET);
+            }
         } else if ("joda".equals(dateLibrary)) {
             additionalProperties.put("joda", "true");
             typeMapping.put("date", "LocalDate");

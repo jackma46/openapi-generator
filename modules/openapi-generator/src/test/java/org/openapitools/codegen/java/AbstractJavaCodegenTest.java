@@ -750,6 +750,24 @@ public class AbstractJavaCodegenTest {
         Assert.assertEquals(fakeJavaCodegen.getTestFolder(), "src/test/java");
     }
 
+    @Test
+    public void shouldUseDateTypeMapping() {
+        fakeJavaCodegen.typeMapping().put("date", "myTestDate");
+        fakeJavaCodegen.importMapping().put("myTestDate", "myTestDateMapping");
+        fakeJavaCodegen.processOpts();
+        Assert.assertEquals(fakeJavaCodegen.typeMapping().get("date"), "myTestDate");
+        Assert.assertEquals(fakeJavaCodegen.importMapping().get("myTestDate"), "myTestDateMapping");
+    }
+
+    @Test
+    public void shouldUseDateTimeTypeMapping() {
+        fakeJavaCodegen.typeMapping().put("DateTime", "myTestDateTime");
+        fakeJavaCodegen.importMapping().put("myTestDateTime", "myTestDateTimeMapping");
+        fakeJavaCodegen.processOpts();
+        Assert.assertEquals(fakeJavaCodegen.typeMapping().get("DateTime"), "myTestDateTime");
+        Assert.assertEquals(fakeJavaCodegen.importMapping().get("myTestDateTime"), "myTestDateTimeMapping");
+    }
+
     private static Schema<?> createObjectSchemaWithMinItems() {
         return new ObjectSchema()
                 .addProperties("id", new IntegerSchema().format("int32"))
