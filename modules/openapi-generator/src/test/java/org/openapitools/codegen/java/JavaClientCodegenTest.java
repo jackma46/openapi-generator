@@ -1152,7 +1152,7 @@ public class JavaClientCodegenTest {
 
         DefaultGenerator generator = new DefaultGenerator();
         List<File> files = generator.opts(configurator.toClientOptInput()).generate();
-        files.forEach(File::deleteOnExit);
+        //files.forEach(File::deleteOnExit);
 
 
         Path defaultApi = Paths.get(output + "/src/main/java/xyz/abcdef/api/MultipartApi.java");
@@ -1227,5 +1227,74 @@ public class JavaClientCodegenTest {
 
         final Path defaultApi = Paths.get(output + "/src/main/java/xyz/abcdef/ApiClient.java");
         TestUtils.assertFileContains(defaultApi, "value instanceof Map");
+    }
+
+    /**
+     * Related to issue 10621: https://github.com/OpenAPITools/openapi-generator/issues/10621
+     * Test to find if the newly added JavaClientCodeGen option MULTIPLE_WEB_CLIENTS work as intended
+     * The generated code should add @Qualifier("{{invokerPackage}}.RestTemplate") as specified in issue 10621
+     * @throws IOException
+     */
+    @Test
+    public void shouldGenerateRestTemplateWithQualifier() throws IOException {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(JavaClientCodegen.JAVA8_MODE, true);
+        properties.put(CodegenConstants.API_PACKAGE, "xyz.abcdef.api");
+        properties.put(JavaClientCodegen.USE_ABSTRACTION_FOR_FILES, true);
+        properties.put(JavaClientCodegen.MULTIPLE_WEB_CLIENTS, true);
+
+
+        File output = Files.createTempDirectory("test").toFile();
+        output.deleteOnExit();
+
+        final CodegenConfigurator configurator = new CodegenConfigurator()
+                .setGeneratorName("java")
+                .setLibrary(JavaClientCodegen.RESTTEMPLATE)
+                .setAdditionalProperties(properties)
+                .setInputSpec("src/test/resources/3_0/issue_10621_multiple_clients.yaml")
+                .setOutputDir(output.getAbsolutePath().replace("\\", "/"));
+
+
+        DefaultGenerator generator = new DefaultGenerator();
+        List<File> files = generator.opts(configurator.toClientOptInput()).generate();
+        //files.forEach(File::deleteOnExit);
+
+
+        Path defaultApi = Paths.get(output + "/src/main/java/xyz/abcdef/ApiClient.java");
+        TestUtils.assertFileContains(defaultApi, "@Qualifier(\"xyz.abcdef.RestTemplate\")");
+    }
+
+    /**
+     * Related to issue 10621: https://github.com/OpenAPITools/openapi-generator/issues/10621
+     * To test if the newly added option would impact legacy code generation without new option
+     * The generated code should NOT add @Qualifier("{{invokerPackage}}.RestTemplate")
+     * @throws IOException
+     */
+    @Test
+    public void shouldGenerateRestTemplateWithoutQualifier() throws IOException {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(JavaClientCodegen.JAVA8_MODE, true);
+        properties.put(CodegenConstants.API_PACKAGE, "xyz.abcdef.api");
+        properties.put(JavaClientCodegen.USE_ABSTRACTION_FOR_FILES, true);
+
+
+        File output = Files.createTempDirectory("test").toFile();
+        output.deleteOnExit();
+
+        final CodegenConfigurator configurator = new CodegenConfigurator()
+                .setGeneratorName("java")
+                .setLibrary(JavaClientCodegen.RESTTEMPLATE)
+                .setAdditionalProperties(properties)
+                .setInputSpec("src/test/resources/3_0/issue_10621_multiple_clients.yaml")
+                .setOutputDir(output.getAbsolutePath().replace("\\", "/"));
+
+
+        DefaultGenerator generator = new DefaultGenerator();
+        List<File> files = generator.opts(configurator.toClientOptInput()).generate();
+        //files.forEach(File::deleteOnExit);
+
+
+        Path defaultApi = Paths.get(output + "/src/main/java/xyz/abcdef/ApiClient.java");
+        TestUtils.assertFileContains(defaultApi, "ApiClient(RestTemplate restTemplate)");
     }
 }

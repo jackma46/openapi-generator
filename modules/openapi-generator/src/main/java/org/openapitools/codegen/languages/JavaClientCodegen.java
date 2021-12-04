@@ -93,6 +93,8 @@ public class JavaClientCodegen extends AbstractJavaCodegen
     public static final String SERIALIZATION_LIBRARY_JACKSON = "jackson";
     public static final String SERIALIZATION_LIBRARY_JSONB = "jsonb";
 
+    public static final String MULTIPLE_WEB_CLIENTS = "multipleWebClients";
+
     protected String gradleWrapperPackage = "gradle.wrapper";
     protected boolean useRxJava = false;
     protected boolean useRxJava2 = false;
