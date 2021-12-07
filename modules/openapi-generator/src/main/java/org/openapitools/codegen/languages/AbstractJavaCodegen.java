@@ -268,6 +268,10 @@ public abstract class AbstractJavaCodegen extends DefaultCodegen implements Code
 
     }
 
+    /**
+     *  Changed for issue 9461: https://github.com/OpenAPITools/openapi-generator/issues/9461
+     *  Changed to include user specified typeMapping and importMapping if the dateLibrary is default.
+     */
     @Override
     public void processOpts() {
         super.processOpts();

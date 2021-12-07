@@ -750,32 +750,35 @@ public class AbstractJavaCodegenTest {
         Assert.assertEquals(fakeJavaCodegen.getTestFolder(), "src/test/java");
     }
 
+    private static final String MY_TEST_DATE = "myTestDate";
+    private static final String MY_TEST_DATE_TIME = "myTestDateTime";
+
     /**
+     *      This is testing for issue #9461: https://github.com/OpenAPITools/openapi-generator/issues/9461
      *      Test added to test the changes to processOpts(), specifically the lines to process dateLibrary
-     *      This is testing implementation for issue #9461
      *      If user enters type mapping for date and corresponding import mapping, this should not be overwritten by dateLibrary
      */
     @Test
     public void shouldUseDateTypeMapping() {
-        fakeJavaCodegen.typeMapping().put("date", "myTestDate");
-        fakeJavaCodegen.importMapping().put("myTestDate", "myTestDateMapping");
+        fakeJavaCodegen.typeMapping().put("date", MY_TEST_DATE);
+        fakeJavaCodegen.importMapping().put(MY_TEST_DATE, "myTestDateMapping");
         fakeJavaCodegen.processOpts();
-        Assert.assertEquals(fakeJavaCodegen.typeMapping().get("date"), "myTestDate");
-        Assert.assertEquals(fakeJavaCodegen.importMapping().get("myTestDate"), "myTestDateMapping");
+        Assert.assertEquals(fakeJavaCodegen.typeMapping().get("date"), MY_TEST_DATE);
+        Assert.assertEquals(fakeJavaCodegen.importMapping().get(MY_TEST_DATE), "myTestDateMapping");
     }
 
     /**
+     *      This is testing for issue #9461: https://github.com/OpenAPITools/openapi-generator/issues/9461
      *      Test added to test the changes to processOpts(), specifically the lines to process dateLibrary
-     *      This is testing implementation for issue #9461
      *      If user enters type mapping for DateTime and corresponding import mapping, this should not be overwritten by dateLibrary
      */
     @Test
     public void shouldUseDateTimeTypeMapping() {
-        fakeJavaCodegen.typeMapping().put("DateTime", "myTestDateTime");
-        fakeJavaCodegen.importMapping().put("myTestDateTime", "myTestDateTimeMapping");
+        fakeJavaCodegen.typeMapping().put("DateTime", MY_TEST_DATE_TIME);
+        fakeJavaCodegen.importMapping().put(MY_TEST_DATE_TIME, "myTestDateTimeMapping");
         fakeJavaCodegen.processOpts();
-        Assert.assertEquals(fakeJavaCodegen.typeMapping().get("DateTime"), "myTestDateTime");
-        Assert.assertEquals(fakeJavaCodegen.importMapping().get("myTestDateTime"), "myTestDateTimeMapping");
+        Assert.assertEquals(fakeJavaCodegen.typeMapping().get("DateTime"), MY_TEST_DATE_TIME);
+        Assert.assertEquals(fakeJavaCodegen.importMapping().get(MY_TEST_DATE_TIME), "myTestDateTimeMapping");
     }
 
     private static Schema<?> createObjectSchemaWithMinItems() {
