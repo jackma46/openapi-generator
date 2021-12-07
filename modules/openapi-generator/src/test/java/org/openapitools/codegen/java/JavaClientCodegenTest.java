@@ -1152,7 +1152,7 @@ public class JavaClientCodegenTest {
 
         DefaultGenerator generator = new DefaultGenerator();
         List<File> files = generator.opts(configurator.toClientOptInput()).generate();
-        //files.forEach(File::deleteOnExit);
+        files.forEach(File::deleteOnExit);
 
 
         Path defaultApi = Paths.get(output + "/src/main/java/xyz/abcdef/api/MultipartApi.java");
@@ -1243,7 +1243,6 @@ public class JavaClientCodegenTest {
         properties.put(JavaClientCodegen.USE_ABSTRACTION_FOR_FILES, true);
         properties.put(JavaClientCodegen.MULTIPLE_WEB_CLIENTS, true);
 
-
         File output = Files.createTempDirectory("test").toFile();
         output.deleteOnExit();
 
@@ -1254,11 +1253,8 @@ public class JavaClientCodegenTest {
                 .setInputSpec("src/test/resources/3_0/issue_10621_multiple_clients.yaml")
                 .setOutputDir(output.getAbsolutePath().replace("\\", "/"));
 
-
         DefaultGenerator generator = new DefaultGenerator();
-        List<File> files = generator.opts(configurator.toClientOptInput()).generate();
-        //files.forEach(File::deleteOnExit);
-
+        generator.opts(configurator.toClientOptInput()).generate();
 
         Path defaultApi = Paths.get(output + "/src/main/java/xyz/abcdef/ApiClient.java");
         TestUtils.assertFileContains(defaultApi, "@Qualifier(\"xyz.abcdef.RestTemplate\")");
@@ -1277,7 +1273,6 @@ public class JavaClientCodegenTest {
         properties.put(CodegenConstants.API_PACKAGE, "xyz.abcdef.api");
         properties.put(JavaClientCodegen.USE_ABSTRACTION_FOR_FILES, true);
 
-
         File output = Files.createTempDirectory("test").toFile();
         output.deleteOnExit();
 
@@ -1288,13 +1283,27 @@ public class JavaClientCodegenTest {
                 .setInputSpec("src/test/resources/3_0/issue_10621_multiple_clients.yaml")
                 .setOutputDir(output.getAbsolutePath().replace("\\", "/"));
 
-
         DefaultGenerator generator = new DefaultGenerator();
-        List<File> files = generator.opts(configurator.toClientOptInput()).generate();
-        //files.forEach(File::deleteOnExit);
-
+        generator.opts(configurator.toClientOptInput()).generate();
 
         Path defaultApi = Paths.get(output + "/src/main/java/xyz/abcdef/ApiClient.java");
         TestUtils.assertFileContains(defaultApi, "ApiClient(RestTemplate restTemplate)");
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
