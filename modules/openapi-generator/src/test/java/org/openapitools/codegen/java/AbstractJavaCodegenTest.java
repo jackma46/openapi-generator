@@ -568,7 +568,7 @@ public class AbstractJavaCodegenTest {
         Double doubleValue = 100.0;
         numberSchema.setDefault(doubleValue);
         defaultValue = codegen.toDefaultValue(numberSchema);
-        Assert.assertEquals(defaultValue, "new BigDecimal(\"" + doubleValue + "\")");
+        Assert.assertEquals(defaultValue, "new BigDecimal(\"" + doubleValue.toString() + "\")");
 
         // Test default value for number with format set to double
         numberSchema.setFormat("double");
@@ -748,6 +748,37 @@ public class AbstractJavaCodegenTest {
         // it's not responsibility of the generator to fix OS-specific paths. This is left to template manager.
         // This path must be non-OS-specific for expectations in source outputs (e.g. gradle build files)
         Assert.assertEquals(fakeJavaCodegen.getTestFolder(), "src/test/java");
+    }
+
+    private static final String MY_TEST_DATE = "myTestDate";
+    private static final String MY_TEST_DATE_TIME = "myTestDateTime";
+
+    /**
+     *      This is testing for issue #9461: https://github.com/OpenAPITools/openapi-generator/issues/9461
+     *      Test added to test the changes to processOpts(), specifically the lines to process dateLibrary
+     *      If user enters type mapping for date and corresponding import mapping, this should not be overwritten by dateLibrary
+     */
+    @Test
+    public void shouldUseDateTypeMapping() {
+        fakeJavaCodegen.typeMapping().put("date", MY_TEST_DATE);
+        fakeJavaCodegen.importMapping().put(MY_TEST_DATE, "myTestDateMapping");
+        fakeJavaCodegen.processOpts();
+        Assert.assertEquals(fakeJavaCodegen.typeMapping().get("date"), MY_TEST_DATE);
+        Assert.assertEquals(fakeJavaCodegen.importMapping().get(MY_TEST_DATE), "myTestDateMapping");
+    }
+
+    /**
+     *      This is testing for issue #9461: https://github.com/OpenAPITools/openapi-generator/issues/9461
+     *      Test added to test the changes to processOpts(), specifically the lines to process dateLibrary
+     *      If user enters type mapping for DateTime and corresponding import mapping, this should not be overwritten by dateLibrary
+     */
+    @Test
+    public void shouldUseDateTimeTypeMapping() {
+        fakeJavaCodegen.typeMapping().put("DateTime", MY_TEST_DATE_TIME);
+        fakeJavaCodegen.importMapping().put(MY_TEST_DATE_TIME, "myTestDateTimeMapping");
+        fakeJavaCodegen.processOpts();
+        Assert.assertEquals(fakeJavaCodegen.typeMapping().get("DateTime"), MY_TEST_DATE_TIME);
+        Assert.assertEquals(fakeJavaCodegen.importMapping().get(MY_TEST_DATE_TIME), "myTestDateTimeMapping");
     }
 
     private static Schema<?> createObjectSchemaWithMinItems() {
