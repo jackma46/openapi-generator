@@ -121,8 +121,9 @@ public class ApiClient{{#jsr310}} extends JavaTimeFormatter{{/jsr310}} {
         init();
     }
 
+
     @Autowired
-    public ApiClient(RestTemplate restTemplate) {
+    public ApiClient({{#multipleWebClients}}@Qualifier("{{invokerPackage}}.RestTemplate") {{/multipleWebClients}}RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         init();
     }
